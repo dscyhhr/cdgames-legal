@@ -15,29 +15,27 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: #231F20; }
 <!-- TikTok Mini Games SDK -->
 <script src="https://developers.tiktok.com/js/minis.js"></script>
 <script>
-  // ── 发布前替换为实际值 ──
   window.CD_TIKTOK_CLIENT_KEY = 'sbaw6bjy6uv7a0srwt';
-  window.CD_TIKTOK_AD_UNIT_ID = '__TIKTOK_AD_UNIT_ID__'; // 在 Developer Portal Monetization 页面创建广告位后替换
-
-  TTMinis.game.init({
-    clientKey: window.CD_TIKTOK_CLIENT_KEY
-  });
+  window.CD_TIKTOK_AD_UNIT_ID = '__TIKTOK_AD_UNIT_ID__';
+  try {
+    TTMinis.game.init({ clientKey: window.CD_TIKTOK_CLIENT_KEY });
+  } catch (e) {
+    console.warn('[TikTok] SDK init skipped (not in TikTok env):', e);
+  }
 </script>
-<script src=""></script>
+<script src="Build/TikTok.loader.js"></script>
 <script>
   createUnityInstance(document.querySelector("#unity-canvas"), {
-    dataUrl:             "",
-    frameworkUrl:        "",
-    codeUrl:             "",
+    dataUrl:             "Build/TikTok.data",
+    frameworkUrl:        "Build/TikTok.framework.js",
+    codeUrl:             "Build/TikTok.wasm",
     streamingAssetsUrl:  "StreamingAssets",
-    companyName:         "DefaultCompany",
+    companyName:         "CDGames",
     productName:         "CD012",
     productVersion:      "0.1.0",
   }, function (progress) {
     try {
-      TTMinis.game.setLoadingProgress({
-        progress: Math.min(progress, 1)
-      });
+      TTMinis.game.setLoadingProgress({ progress: Math.min(progress, 1) });
     } catch (e) {}
   }).then(function (instance) {
     window.unityInstance = instance;
