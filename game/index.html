@@ -8,49 +8,43 @@
 * { margin: 0; padding: 0; }
 html, body { width: 100%; height: 100%; overflow: hidden; background: #231F20; }
 #unity-canvas { width: 100%; height: 100%; }
-#loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #fff; font-family: sans-serif; font-size: 18px; }
 </style>
 </head>
 <body>
 <canvas id="unity-canvas" tabindex="-1"></canvas>
-<div id="loading">Loading... 0%</div>
-<script src="https://developers.tiktok.com/js/minis.js" async></script>
+<!-- TikTok Mini Games SDK -->
+<script src="https://developers.tiktok.com/js/minis.js"></script>
 <script>
+  // ── 发布前替换为实际值 ──
   window.CD_TIKTOK_CLIENT_KEY = 'sbaw6bjy6uv7a0srwt';
-  window.CD_TIKTOK_AD_UNIT_ID = '__TIKTOK_AD_UNIT_ID__';
-  function _tryTikTokInit() {
-    try {
-      if (typeof TTMinis !== 'undefined' && TTMinis.game) {
-        TTMinis.game.init({ clientKey: window.CD_TIKTOK_CLIENT_KEY });
-      }
-    } catch (e) { console.warn('[TikTok] SDK init skipped:', e); }
+  window.CD_TIKTOK_AD_UNIT_ID = '__TIKTOK_AD_UNIT_ID__'; // 在 Developer Portal Monetization 页面创建广告位后替换
+
+  try {
+    TTMinis.game.init({ clientKey: window.CD_TIKTOK_CLIENT_KEY });
+  } catch (e) {
+    console.warn('[TikTok] SDK init skipped:', e);
   }
-  setTimeout(_tryTikTokInit, 2000);
 </script>
 <script src="Build/TikTok.loader.js"></script>
 <script>
-  var loadingDiv = document.getElementById('loading');
   createUnityInstance(document.querySelector("#unity-canvas"), {
     dataUrl:             "Build/TikTok.data",
     frameworkUrl:        "Build/TikTok.framework.js",
     codeUrl:             "Build/TikTok.wasm",
     streamingAssetsUrl:  "StreamingAssets",
-    companyName:         "CDGames",
+    companyName:         "DefaultCompany",
     productName:         "CD012",
     productVersion:      "0.1.0",
   }, function (progress) {
-    if (loadingDiv) loadingDiv.textContent = 'Loading... ' + Math.round(progress * 100) + '%';
     try {
-      if (typeof TTMinis !== 'undefined' && TTMinis.game) {
-        TTMinis.game.setLoadingProgress({ progress: Math.min(progress, 1) });
-      }
+      TTMinis.game.setLoadingProgress({
+        progress: Math.min(progress, 1)
+      });
     } catch (e) {}
   }).then(function (instance) {
     window.unityInstance = instance;
-    if (loadingDiv) loadingDiv.style.display = 'none';
   }).catch(function (err) {
-    if (loadingDiv) loadingDiv.textContent = 'Error: ' + err;
-    console.error('[Unity] Load error:', err);
+    console.error('[TikTok] Unity load error:', err);
   });
 </script>
 </body>
